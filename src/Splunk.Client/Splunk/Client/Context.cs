@@ -1,18 +1,4 @@
-﻿/*
- * Copyright 2014 Splunk, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"): you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
+﻿using System.Security.Authentication;
 
 namespace Splunk.Client
 {
@@ -58,7 +44,7 @@ namespace Splunk.Client
         /// or greater than <c>65535</c>.
         /// </exception>
         public Context(Scheme scheme, string host, int port, TimeSpan timeout = default(TimeSpan))
-            : this(scheme, host, port, timeout, null)
+            : this(scheme, host, port, timeout, SslProtocols.None, false)
         {
             // NOTE: This constructor obviates the need for callers to include a 
             // using for System.Net.Http.
@@ -69,41 +55,46 @@ namespace Splunk.Client
         /// protocol, host, port number, and optional message handler.
         /// </summary>
         /// <param name="scheme">
-        /// The <see cref="Scheme"/> used to communicate with <see cref="Host"/>.
+        ///     The <see cref="Scheme"/> used to communicate with <see cref="Host"/>.
         /// </param>
         /// <param name="host">
-        /// The DNS name of a Splunk server instance.
+        ///     The DNS name of a Splunk server instance.
         /// </param>
         /// <param name="port">
-        /// The port number used to communicate with <see cref="Host"/>.
+        ///     The port number used to communicate with <see cref="Host"/>.
         /// </param>
         /// <param name="timeout">
-        /// The timeout.
+        ///     The timeout.
         /// </param>
-        /// <param name="handler">
-        /// The <see cref="HttpMessageHandler"/> responsible for processing the HTTP
-        /// response messages.
-        /// </param>
-        /// <param name="disposeHandler">
-        /// <c>true</c> if the inner handler should be disposed of by Dispose,
-        /// <c>false</c> if you intend to reuse the inner handler.
-        /// </param>
+        /// <param name="sslProtocols"></param>
         /// <exception name="ArgumentException">
         /// <paramref name="scheme"/> is invalid, <paramref name="host"/> is
         /// <c>null</c> or empty, or <paramref name="port"/> is less than zero
         /// or greater than <c>65535</c>.
         /// </exception>
-        public Context(Scheme scheme, string host, int port, TimeSpan timeout, HttpMessageHandler handler, bool disposeHandler = true)
+        public Context(Scheme scheme, string host, int port, TimeSpan timeout, SslProtocols sslProtocols, bool skipCertificateValidation)
         {
-            Contract.Requires<ArgumentException>(scheme == Scheme.Http || scheme == Scheme.Https);
-            Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(host));
-            Contract.Requires<ArgumentException>(0 <= port && port <= 65535);
+            if (!(scheme == Scheme.Http || scheme == Scheme.Https)) {  throw new ArgumentException("scheme", "scheme == Scheme.Http || scheme == Scheme.Https"); }
+            if (string.IsNullOrEmpty(host)) {  throw new ArgumentException("host", "!string.IsNullOrEmpty(host)"); }
+            if (!(0 <= port && port <= 65535)) {  throw new ArgumentException("port", "0 <= port && port <= 65535"); }
 
             this.Scheme = scheme;
             this.Host = host;
             this.Port = port;
-            this.httpClient = handler == null ? new HttpClient(new HttpClientHandler { UseCookies = false }) : new HttpClient(handler, disposeHandler);
+
+            var handler = new HttpClientHandler
+            {
+                UseCookies = false,
+                SslProtocols = sslProtocols
+            };
+
+            if (skipCertificateValidation)
+                handler.ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true;
+
+            this.httpClient = new HttpClient(handler);
+
             this.httpClient.DefaultRequestHeaders.Add("User-Agent", "splunk-sdk-csharp/2.2.6");
+            
             this.CookieJar = new CookieStore();
 
             if (timeout != default(TimeSpan))
@@ -408,8 +399,8 @@ namespace Splunk.Client
         public virtual async Task<Response> SendAsync(HttpMethod method, Namespace ns, ResourceName resource,
             params IEnumerable<Argument>[] argumentSets)
         {
-            Contract.Requires<ArgumentNullException>(method != null);
-            Contract.Requires<ArgumentException>(method == HttpMethod.Delete || method == HttpMethod.Get || method == HttpMethod.Post);
+            if (method == null) {  throw new ArgumentNullException("method", "method != null"); }
+            if (!(method == HttpMethod.Delete || method == HttpMethod.Get || method == HttpMethod.Post)) {  throw new ArgumentException("method", "method == HttpMethod.Delete || method == HttpMethod.Get || method == HttpMethod.Post"); }
             var token = CancellationToken.None;
             HttpContent content = null;
 
@@ -523,8 +514,8 @@ namespace Splunk.Client
         async Task<HttpResponseMessage> SendAsync(HttpMethod method, Namespace ns, ResourceName resource, HttpContent content, 
             CancellationToken cancellationToken, IEnumerable<Argument>[] argumentSets)
         {
-            Contract.Requires<ArgumentNullException>(ns != null);
-            Contract.Requires<ArgumentNullException>(resource != null);
+            if (ns == null) {  throw new ArgumentNullException("ns", "ns != null"); }
+            if (resource == null) {  throw new ArgumentNullException("resource", "resource != null"); }
 
             var serviceUri = this.CreateServiceUri(ns, resource, argumentSets);
 

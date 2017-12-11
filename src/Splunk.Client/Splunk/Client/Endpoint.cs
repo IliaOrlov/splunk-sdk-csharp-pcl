@@ -1,20 +1,4 @@
-﻿/*
- * Copyright 2014 Splunk, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"): you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
-namespace Splunk.Client
+﻿namespace Splunk.Client
 {
     using System;
     using System.Diagnostics.Contracts;
@@ -47,7 +31,7 @@ namespace Splunk.Client
         public Endpoint(Service service, ResourceName name)
             : this(service.Context, service.Namespace, name)
         {
-            Contract.Requires<ArgumentNullException>(service != null);
+            if (service == null) {  throw new ArgumentNullException("service", "service != null"); }
         }
 
         /// <summary>
@@ -280,8 +264,8 @@ namespace Splunk.Client
         /// </exception>
         protected internal void Initialize(Context context, Uri id)
         {
-            Contract.Requires<ArgumentNullException>(context != null);
-            Contract.Requires<ArgumentNullException>(id != null);
+            if (context == null) {  throw new ArgumentNullException("context", "context != null"); }
+            if (id == null) {  throw new ArgumentNullException("id", "id != null"); }
 
             this.EnsureUninitialized();
 
@@ -359,10 +343,10 @@ namespace Splunk.Client
         /// </exception>
         protected internal void Initialize(Context context, Namespace ns, ResourceName name)
         {
-            Contract.Requires<ArgumentException>(name != null);
-            Contract.Requires<ArgumentNullException>(ns != null);
-            Contract.Requires<ArgumentNullException>(context != null);
-            Contract.Requires<ArgumentOutOfRangeException>(ns.IsSpecific);
+            if (name == null) {  throw new ArgumentException("name", "name != null"); }
+            if (ns == null) {  throw new ArgumentNullException("ns", "ns != null"); }
+            if (context == null) {  throw new ArgumentNullException("context", "context != null"); }
+            if (!(ns.IsSpecific)) {  throw new ArgumentOutOfRangeException("ns", "ns.IsSpecific"); }
 
             this.EnsureUninitialized();
 

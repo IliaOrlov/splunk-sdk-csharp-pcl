@@ -14,6 +14,8 @@
  * under the License.
  */
 
+using System.Security.Authentication;
+
 namespace Splunk.Client.Helpers
 {
     using Splunk.Client;
@@ -76,7 +78,7 @@ namespace Splunk.Client.Helpers
         /// </remarks>
         /// 
         public MockContext(Scheme protocol, string host, int port, TimeSpan timeout = default(TimeSpan))
-            : base(protocol, host, port, timeout, CreateMessageHandler())
+            : base(protocol, host, port, timeout, SslProtocols.Default, false)
         { }
 
         #endregion

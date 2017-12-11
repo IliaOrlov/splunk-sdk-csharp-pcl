@@ -1,25 +1,4 @@
-﻿/*
- * Copyright 2014 Splunk, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"): you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
-//// TODO:
-//// [O] Contracts
-//// [O] Documentation
-//// [ ] What HttpStatusCode does Splunk return when a session key expires?
-
-namespace Splunk.Client
+﻿namespace Splunk.Client
 {
     using System;
     using System.Diagnostics.Contracts;
@@ -72,8 +51,8 @@ namespace Splunk.Client
         protected internal StoragePassword(Service service, string username, string realm = null)
             : this(service.Context, service.Namespace, username, realm)
         {
-            Contract.Requires<ArgumentNullException>(service != null);
-            Contract.Requires<ArgumentNullException>(username != null);
+            if (service == null) {  throw new ArgumentNullException("service", "service != null"); }
+            if (username == null) {  throw new ArgumentNullException("username", "username != null"); }
         }
 
         /// <summary>
@@ -104,7 +83,7 @@ namespace Splunk.Client
         internal StoragePassword(Context context, Namespace ns, string username, string realm = null)
             : base(context, ns, CreateResourceNameFromRealmAndUsername(realm ?? "", username))
         {
-            Contract.Requires<ArgumentNullException>(username != null);
+            if (username == null) {  throw new ArgumentNullException("username", "username != null"); }
         }
 
         /// <summary>
@@ -215,7 +194,7 @@ namespace Splunk.Client
         /// </returns>
         internal static string CreateNameFromRealmAndUsername(string realm, string username)
         {
-            Contract.Requires<ArgumentNullException>(username != null);
+            if (username == null) {  throw new ArgumentNullException("username", "username != null"); }
 
             var parts = new string[] { realm ?? "", username };
             var builder = new StringBuilder();

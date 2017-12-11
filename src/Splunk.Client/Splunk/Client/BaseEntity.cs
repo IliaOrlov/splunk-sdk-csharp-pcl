@@ -1,38 +1,10 @@
-﻿/*
- * Copyright 2014 Splunk, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"): you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
-namespace Splunk.Client
+﻿namespace Splunk.Client
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Dynamic;
     using System.Threading.Tasks;
-
-    /// <summary>
-    /// Provides an object representation of a Splunk entity.
-    /// </summary>
-    /// <remarks>
-    /// This is the base class for all Splunk entities.
-    /// </remarks>
-    /// <typeparam name="TResource">
-    /// Type of the resource.
-    /// </typeparam>
-    /// <seealso cref="T:Splunk.Client.Endpoint"/>
-    [ContractClass(typeof(BaseEntityContract<>))]
     public abstract class BaseEntity<TResource> : Endpoint where TResource : BaseResource, new()
     {
         #region Constructors
@@ -53,7 +25,7 @@ namespace Splunk.Client
         protected BaseEntity(Service service, ResourceName name)
             : base(service.Context, service.Namespace, name)
         {
-            Contract.Requires<ArgumentNullException>(service != null);
+            if (service == null) {  throw new ArgumentNullException("service", "service != null"); }
         }
 
         /// <summary>
@@ -261,7 +233,7 @@ namespace Splunk.Client
         /// </param>
         protected virtual void CreateSnapshot(TResource resource)
         {
-            Contract.Requires<ArgumentNullException>(resource != null);
+            if (resource == null) {  throw new ArgumentNullException("resource", "resource != null"); }
             this.snapshot = resource;
         }
 
@@ -298,9 +270,9 @@ namespace Splunk.Client
         /// </exception>
         protected internal void Initialize(Context context, AtomEntry entry, Version generatorVersion)
         {
-            Contract.Requires<ArgumentNullException>(generatorVersion != null);
-            Contract.Requires<ArgumentNullException>(context != null);
-            Contract.Requires<ArgumentNullException>(entry != null);
+            if (generatorVersion == null) {  throw new ArgumentNullException("generatorVersion", "generatorVersion != null"); }
+            if (context == null) {  throw new ArgumentNullException("context", "context != null"); }
+            if (entry == null) {  throw new ArgumentNullException("entry", "entry != null"); }
 
             this.CreateSnapshot(entry, generatorVersion);
             this.Initialize(context, this.Snapshot.Id);
@@ -328,8 +300,8 @@ namespace Splunk.Client
         /// </param>
         protected internal void Initialize(Context context, AtomFeed feed)
         {
-            Contract.Requires<ArgumentNullException>(context != null);
-            Contract.Requires<ArgumentNullException>(feed != null);
+            if (context == null) {  throw new ArgumentNullException("context", "context != null"); }
+            if (feed == null) {  throw new ArgumentNullException("feed", "feed != null"); }
 
             this.CreateSnapshot(feed);
             this.Initialize(context, this.Snapshot.Id);
@@ -363,8 +335,8 @@ namespace Splunk.Client
         /// </exception>
         protected internal void Initialize(Context context, TResource resource)
         {
-            Contract.Requires<ArgumentNullException>(resource != null);
-            Contract.Requires<ArgumentNullException>(context != null);
+            if (resource == null) {  throw new ArgumentNullException("resource", "resource != null"); }
+            if (context == null) {  throw new ArgumentNullException("context", "context != null"); }
 
             this.CreateSnapshot(resource);
             this.Initialize(context, this.Snapshot.Id);
@@ -382,7 +354,7 @@ namespace Splunk.Client
         /// </returns>
         protected internal virtual async Task<bool> ReconstructSnapshotAsync(Response response)
         {
-            Contract.Requires<ArgumentNullException>(response != null);
+            if (response == null) {  throw new ArgumentNullException("response", "response != null"); }
             var feed = new AtomFeed();
 
             await feed.ReadXmlAsync(response.XmlReader).ConfigureAwait(false);
@@ -406,45 +378,5 @@ namespace Splunk.Client
         }
 
         #endregion
-    }
-
-    /// <summary>
-    /// A base entity contract.
-    /// </summary>
-    /// <typeparam name="TResource">
-    /// Type of the resource.
-    /// </typeparam>
-    /// <seealso cref="T:Splunk.Client.BaseEntity{TResource}"/>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = 
-        "Contract classes should be contained in the same C# document as the class they reprsent.")
-    ]
-    [ContractClassFor(typeof(BaseEntity<>))]
-    public abstract class BaseEntityContract<TResource> : BaseEntity<TResource> where TResource : BaseResource, new()
-    {
-        /// <summary>
-        /// Creates a snapshot.
-        /// </summary>
-        /// <param name="entry">
-        /// The entry.
-        /// </param>
-        /// <param name="generatorVersion">
-        /// The generator version.
-        /// </param>
-        protected override void CreateSnapshot(AtomEntry entry, Version generatorVersion)
-        {
-            Contract.Requires<ArgumentNullException>(entry != null);
-            Contract.Requires<ArgumentNullException>(generatorVersion != null);
-        }
-
-        /// <summary>
-        /// Creates a snapshot.
-        /// </summary>
-        /// <param name="feed">
-        /// An object representing a Splunk atom feed response.
-        /// </param>
-        protected override void CreateSnapshot(AtomFeed feed)
-        {
-            Contract.Requires<ArgumentNullException>(feed != null);
-        }
     }
 }

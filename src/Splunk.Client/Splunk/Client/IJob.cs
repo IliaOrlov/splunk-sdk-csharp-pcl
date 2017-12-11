@@ -1,32 +1,10 @@
-﻿/*
- * Copyright 2014 Splunk, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"): you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
-namespace Splunk.Client
+﻿namespace Splunk.Client
 {
     using System;
     using System.Collections.ObjectModel;
     using System.Diagnostics.Contracts;
     using System.Net.Http;
     using System.Threading.Tasks;
-
-    /// <summary>
-    /// Provides an operational interface to a search job.
-    /// </summary>
-    /// <seealso cref="T:IEntity"/>
-    [ContractClass(typeof(IJobContract))]
     public interface IJob : IEntity
     {
         #region Properties
@@ -898,132 +876,6 @@ namespace Splunk.Client
         Task UnsaveAsync();
 
         #endregion
-
-        #endregion
-    }
-
-    [ContractClassFor(typeof(IJob))]
-    abstract class IJobContract : IJob
-    {
-        #region Properties
-
-        public abstract bool CanSummarize { get; }
-        public abstract DateTime CursorTime { get; }
-        public abstract int DefaultSaveTtl { get; }
-        public abstract int DefaultTtl { get; }
-        public abstract long DiskUsage { get; }
-        public abstract DispatchState DispatchState { get; }
-        public abstract double DoneProgress { get; }
-        public abstract long DropCount { get; }
-        public abstract Eai Eai { get; }
-        public abstract DateTime EarliestTime { get; }
-        public abstract long EventAvailableCount { get; }
-        public abstract long EventCount { get; }
-        public abstract int EventFieldCount { get; }
-        public abstract bool EventIsStreaming { get; }
-        public abstract bool EventIsTruncated { get; }
-        public abstract string EventSearch { get; }
-        public abstract SortDirection EventSorting { get; }
-        public abstract long IndexEarliestTime { get; }
-        public abstract long IndexLatestTime { get; }
-        public abstract bool IsBatchModeSearch { get; }
-        public abstract bool IsDone { get; }
-        public abstract bool IsFailed { get; }
-        public abstract bool IsFinalized { get; }
-        public abstract bool IsPaused { get; }
-        public abstract bool IsPreviewEnabled { get; }
-        public abstract bool IsRealTimeSearch { get; }
-        public abstract bool IsRemoteTimeline { get; }
-        public abstract bool IsSaved { get; }
-        public abstract bool IsSavedSearch { get; }
-        public abstract bool IsZombie { get; }
-        public abstract string Keywords { get; }
-        public abstract DateTime LatestTime { get; }
-        public abstract string NormalizedSearch { get; }
-        public abstract int NumPreviews { get; }
-        public abstract dynamic Performance { get; }
-        public abstract int Pid { get; }
-        public abstract int Priority { get; }
-        public abstract string RemoteSearch { get; }
-        public abstract string ReportSearch { get; }
-        public abstract dynamic Request { get; }
-        public abstract long ResultCount { get; }
-        public abstract bool ResultIsStreaming { get; }
-        public abstract long ResultPreviewCount { get; }
-        public abstract double RunDuration { get; }
-        public abstract Job.RuntimeAdapter Runtime { get; }
-        public abstract long ScanCount { get; }
-        public abstract string Search { get; }
-        public abstract DateTime SearchEarliestTime { get; }
-        public abstract DateTime SearchLatestTime { get; }
-        public abstract ReadOnlyCollection<string> SearchProviders { get; }
-        public abstract string Sid { get; }
-        public abstract int StatusBuckets { get; }
-        public abstract long Ttl { get; }
-
-        #endregion
-
-        #region Methods
-
-        public abstract Task GetAsync(DispatchState dispatchState, int delay, int retryInterval);
-
-        public abstract Task<bool> SendAsync(HttpMethod method, string action, params Argument[] arguments);
-
-        public abstract Task TransitionAsync(DispatchState dispatchState, int delay, int retryInterval);
-
-        public Task<bool> UpdateAsync(CustomJobArgs arguments)
-        {
-            Contract.Requires(arguments != null);
-            return default(Task<bool>);
-        }
-
-        public abstract Task<SearchResultStream> GetSearchEventsAsync(SearchEventArgs args);
-
-        public abstract Task<SearchResultStream> GetSearchEventsAsync(int count = 0);
-
-        public abstract Task<SearchResultStream> GetSearchPreviewAsync(SearchResultArgs args);
-
-        public abstract Task<SearchResultStream> GetSearchPreviewAsync(int count = 0);
-
-        public abstract Task<HttpResponseMessage> GetSearchResponseMessageAsync(SearchResultArgs args, OutputMode outputMode = OutputMode.Xml);
-
-        public abstract Task<HttpResponseMessage> GetSearchResponseMessageAsync(int count = 0, OutputMode outputMode = OutputMode.Xml);
-
-        public abstract Task<SearchResultStream> GetSearchResultsAsync(SearchResultArgs args);
-
-        public abstract Task<SearchResultStream> GetSearchResultsAsync(int count = 0);
-
-        public abstract Task CancelAsync();
-
-        public abstract Task DisablePreviewAsync();
-
-        public abstract Task EnablePreviewAsync();
-
-        public abstract Task FinalizeAsync();
-
-        public abstract Task<bool> InvokeAsync(string action);
-
-        public abstract Task PauseAsync();
-
-        public abstract Task SaveAsync();
-
-        public abstract Task SetPriorityAsync(int priority);
-
-        public abstract Task SetTtlAsync(int ttl);
-
-        public abstract Task TouchAsync(int ttl);
-
-        public abstract Task UnpauseAsync();
-
-        public abstract Task UnsaveAsync();
-
-        public abstract Task GetAsync();
-
-        public abstract Task RemoveAsync();
-
-        public abstract Task<bool> UpdateAsync(params Argument[] arguments);
-
-        public abstract Task<bool> UpdateAsync(System.Collections.Generic.IEnumerable<Argument> arguments);
 
         #endregion
     }

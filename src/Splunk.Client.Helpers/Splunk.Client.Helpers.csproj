@@ -6,7 +6,7 @@
     <AssemblyName>Splunk.Client.Helpers</AssemblyName>
     <OutputType>Library</OutputType>
     <Platform>AnyCPU</Platform>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -14,6 +14,7 @@
     <ErrorReport>prompt</ErrorReport>
     <FileAlignment>512</FileAlignment>
     <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
     <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
@@ -108,12 +109,12 @@
     <DocumentationFile Condition=" '$(GenerateDocumentationFile)' == 'True' ">$(OutputPath)$(AssemblyName).XML</DocumentationFile>
   </PropertyGroup>
   <Choose>
-    <When Condition=" '$(UseHostCompilerIfAvailable)' == 'False' And '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' " >
+    <When Condition=" '$(UseHostCompilerIfAvailable)' == 'False' And '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
       <PropertyGroup>
         <DefineConstants>DEBUG;TRACE;__MonoCs__</DefineConstants>
       </PropertyGroup>
     </When>
-    <When Condition=" '$(UseHostCompilerIfAvailable)' == 'False' And '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " >
+    <When Condition=" '$(UseHostCompilerIfAvailable)' == 'False' And '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
       <PropertyGroup>
         <DefineConstants>TRACE;CODE_ANALYSIS;__MonoCs__</DefineConstants>
       </PropertyGroup>

@@ -1,20 +1,4 @@
-﻿/*
- * Copyright 2014 Splunk, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"): you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
-namespace Splunk.Client
+﻿namespace Splunk.Client
 {
     using System;
     using System.Collections.Generic;
@@ -23,12 +7,6 @@ namespace Splunk.Client
     using System.Diagnostics.Contracts;
     using System.Net.Http;
     using System.Threading.Tasks;
-
-    /// <summary>
-    /// Provids an operational interface to Splunk saved search entities.
-    /// </summary>
-    /// <seealso cref="T:IEntity"/>
-    [ContractClass(typeof(ISavedSearchContract))]
     public interface ISavedSearch : IEntity
     {
         #region Properties
@@ -358,78 +336,6 @@ namespace Splunk.Client
         /// </returns>
         Task<bool> UpdateAsync(string search = null, SavedSearchAttributes attributes = null, 
             SavedSearchDispatchArgs dispatchArgs = null, SavedSearchTemplateArgs templateArgs = null);
-
-        #endregion
-    }
-
-    [ContractClassFor(typeof(ISavedSearch))]
-    abstract class ISavedSearchContract : ISavedSearch
-    {
-        #region Properties
-
-        public abstract SavedSearch.ActionsAdapter Actions { get; }
-        public abstract SavedSearch.AlertAdapter Alert { get; }
-        public abstract SavedSearch.AutoSummarizeAdapter AutoSummarize { get; }
-        public abstract string CronSchedule { get; }
-        public abstract string Description { get; }
-        public abstract SavedSearch.DispatchAdapter Dispatch { get; }
-        public abstract SavedSearch.DisplayAdapter Display { get; }
-        public abstract Eai Eai { get; }
-        public abstract bool IsDisabled { get; }
-        public abstract bool IsScheduled { get; }
-        public abstract bool IsVisible { get; }
-        public abstract int MaxConcurrent { get; }
-        public abstract DateTime NextScheduledTime { get; }
-        public abstract string QualifiedSearch { get; }
-        public abstract bool RealTimeSchedule { get; }
-        public abstract SavedSearch.RequestAdapter Request { get; }
-        public abstract bool RestartOnSearchPeerAdd { get; }
-        public abstract bool RunOnStartup { get; }
-        public abstract ReadOnlyCollection<DateTime> ScheduledTimes { get; }
-        public abstract string Search { get; }
-        
-        #endregion
-
-        #region Methods
-
-        public abstract Task<Job> DispatchAsync(SavedSearchDispatchArgs dispatchArgs = null, 
-            SavedSearchTemplateArgs templateArgs = null);
-
-        public Task GetAsync(SavedSearch.Filter criteria)
-        {
-            Contract.Requires<ArgumentNullException>(criteria != null);
-            return default(Task);
-        }
-
-        public abstract Task<JobCollection> GetHistoryAsync();
-
-        public Task<ReadOnlyCollection<DateTime>> GetScheduledTimesAsync(string earliestTime, string latestTime) 
-        {
-            Contract.Requires<ArgumentNullException>(earliestTime != null);
-            Contract.Requires<ArgumentNullException>(latestTime != null);
-            return default(Task<ReadOnlyCollection<DateTime>>);
-        }
-
-        public abstract Task ScheduleAsync(DateTime? scheduleTime = null);
-
-        public abstract Task GetAsync();
-
-        public abstract Task<bool> InvokeAsync(string action);
-
-        public abstract Task RemoveAsync();
-
-        public abstract Task<bool> SendAsync(HttpMethod method, string action, params Argument[] arguments);
-
-        public abstract Task<bool> UpdateAsync(params Argument[] arguments);
-
-        public abstract Task<bool> UpdateAsync(IEnumerable<Argument> arguments);
-
-        public Task<bool> UpdateAsync(string search = null, SavedSearchAttributes attributes = null, 
-            SavedSearchDispatchArgs dispatchArgs = null, SavedSearchTemplateArgs templateArgs = null)
-        {
-            Contract.Requires<ArgumentException>(!(search == null && attributes == null && dispatchArgs == null && templateArgs == null));
-            return default(Task<bool>);
-        }
 
         #endregion
     }

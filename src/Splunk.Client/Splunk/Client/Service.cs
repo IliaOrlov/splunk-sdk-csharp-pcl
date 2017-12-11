@@ -1,22 +1,4 @@
-﻿/*
- * Copyright 2014 Splunk, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"): you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
-//// TODO:
-//// [ ] Consider schema validation from schemas stored as resources.
-////     See [XmlReaderSettings.Schemas Property](http://goo.gl/Syvj4V)
+﻿using System.Security.Authentication;
 
 namespace Splunk.Client
 {
@@ -57,7 +39,7 @@ namespace Splunk.Client
         /// </exception>
         public Service(Context context, Namespace ns = null)
         {
-            Contract.Requires<ArgumentNullException>(context != null, "context");
+            if (context == null) {  throw new ArgumentNullException("context", "context != null"); }
 
             this.context = context;
             this.ns = ns ?? Namespace.Default;
@@ -93,8 +75,8 @@ namespace Splunk.Client
         /// <c>null</c> or empty, or <paramref name="port"/> is less than zero
         /// or greater than <c>65535</c>.
         /// </exception>
-        public Service(Scheme scheme, string host, int port, Namespace ns = null)
-            : this(new Context(scheme, host, port), ns)
+        public Service(Scheme scheme, string host, int port, SslProtocols sslProtocol = default(SslProtocols), bool skipCertificateValidation = false, Namespace ns = null)
+            : this(new Context(scheme, host, port, default(TimeSpan), sslProtocol, skipCertificateValidation), ns)
         { }
 
         /// <summary>
@@ -119,7 +101,7 @@ namespace Splunk.Client
         public Service(Uri uri, Namespace ns = null)
             : this(new Context(GetScheme(uri.Scheme), uri.Host, uri.Port), ns)
         {
-            Contract.Requires<ArgumentNullException>(uri != null);
+            if (uri == null) {  throw new ArgumentNullException("uri", "uri != null"); }
         }
 
         private static Scheme GetScheme(string schemeString)

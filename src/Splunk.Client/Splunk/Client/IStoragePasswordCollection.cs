@@ -1,24 +1,4 @@
-﻿/*
- * Copyright 2014 Splunk, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"): you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
-//// TODO
-//// [O] Contracts
-//// [O] Documentation
-
-namespace Splunk.Client
+﻿namespace Splunk.Client
 {
     using System;
     using System.Collections;
@@ -26,16 +6,6 @@ namespace Splunk.Client
     using System.Collections.ObjectModel;
     using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
-
-    /// <summary>
-    /// Interface for storage password collection.
-    /// </summary>
-    /// <typeparam name="TStoragePassword">
-    /// Type of the storage password.
-    /// </typeparam>
-    /// <seealso cref="T:IPaginated"/>
-    /// <seealso cref="T:IEntityCollection{TStoragePassword"/>
-    [ContractClass(typeof(IStoragePasswordCollectionContract<>))]
     public interface IStoragePasswordCollection<TStoragePassword> : IPaginated, IEntityCollection<TStoragePassword, Resource>
         where TStoragePassword : BaseEntity<Resource>, IStoragePassword, new()
     {
@@ -116,67 +86,5 @@ namespace Splunk.Client
         /// A <see cref="Task"/> representing the operation.
         /// </returns>
         Task GetSliceAsync(StoragePasswordCollection.Filter criteria);
-    }
-
-    /// <summary>
-    /// A storage password collection contract.
-    /// </summary>
-    /// <typeparam name="TStoragePassword">
-    /// Type of the storage password.
-    /// </typeparam>
-    /// <seealso cref="T:Splunk.Client.IStoragePasswordCollection{TStoragePassword}"/>
-    [ContractClassFor(typeof(IStoragePasswordCollection<>))]
-    abstract class IStoragePasswordCollectionContract<TStoragePassword> : IStoragePasswordCollection<TStoragePassword>
-        where TStoragePassword : BaseEntity<Resource>, IStoragePassword, new()
-    {
-        public abstract TStoragePassword this[int index] { get; }
-
-        public abstract int Count { get; }
-
-        public abstract ReadOnlyCollection<Message> Messages { get; }
-
-        public abstract Pagination Pagination { get; }
-
-        public Task<TStoragePassword> CreateAsync(string password, string username, string realm)
-        {
-            Contract.Requires<ArgumentException>(password != null);
-            Contract.Requires<ArgumentException>(username != null);
-            return default(Task<TStoragePassword>);
-        }
-
-        public abstract Task GetAllAsync();
-
-        public abstract Task<TStoragePassword> GetAsync(string name);
-
-        public Task<TStoragePassword> GetAsync(string username, string realm)
-        {
-            Contract.Requires<ArgumentNullException>(username != null);
-            return default(Task<TStoragePassword>);
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return default(IEnumerator);
-        }
-
-        public abstract IEnumerator<TStoragePassword> GetEnumerator();
-
-        public Task<TStoragePassword> GetOrNullAsync(string username, string realm)
-        {
-            Contract.Requires<ArgumentNullException>(username != null);
-            return default(Task<TStoragePassword>);
-        }
-
-        public abstract Task GetSliceAsync(params Argument[] arguments);
-
-        public abstract Task GetSliceAsync(IEnumerable<Argument> arguments);
-
-        public Task GetSliceAsync(StoragePasswordCollection.Filter criteria)
-        {
-            Contract.Requires<ArgumentException>(criteria != null);
-            return default(Task);
-        }
-
-        public abstract Task ReloadAsync();
     }
 }

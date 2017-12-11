@@ -1,25 +1,4 @@
-﻿/*
- * Copyright 2014 Splunk, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"): you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
-//// TODO:
-//// [O] Contracts
-//// [O] Documentation
-//// [ ] Trace messages (e.g., when there are no observers)
-
-namespace Splunk.Client
+﻿namespace Splunk.Client
 {
     using System;
     using System.Collections.Generic;
@@ -187,8 +166,8 @@ namespace Splunk.Client
         {
             public Subscription(Observable<T> observable, LinkedListNode<IObserver<T>> node)
             {
-                Contract.Requires<ArgumentNullException>(observable != null, "observable");
-                Contract.Requires<ArgumentNullException>(node != null, "node");
+                if (observable == null) {  throw new ArgumentNullException("observable", "observable != null"); }
+                if (node == null) {  throw new ArgumentNullException("node", "node != null"); }
                 
                 this.node = node;
                 this.observable = observable;

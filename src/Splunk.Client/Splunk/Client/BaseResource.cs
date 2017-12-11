@@ -1,24 +1,4 @@
-﻿/*
- * Copyright 2014 Splunk, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"): you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
-//// TODO:
-//// [O] Contracts
-//// [O] Documentation
-
-namespace Splunk.Client
+﻿namespace Splunk.Client
 {
     using System;
     using System.Collections.Generic;
@@ -27,13 +7,6 @@ namespace Splunk.Client
     using System.Diagnostics.Contracts;
     using System.Dynamic;
     using System.Threading.Tasks;
-
-    /// <summary>
-    /// Provides a base class that represents a Splunk resource as an object.
-    /// </summary>
-    /// <seealso cref="T:Splunk.Client.ExpandoAdapter"/>
-    /// <seealso cref="T:Splunk.Client.IBaseResource"/>
-    [ContractClass(typeof(BaseResourceContract))]
     public abstract class BaseResource : ExpandoAdapter, IBaseResource
     {
         #region Constructors
@@ -274,8 +247,8 @@ namespace Splunk.Client
             Version generatorVersion)
             where TResource : BaseResource, new()
         {
-            Contract.Requires<ArgumentNullException>(entry != null);
-            Contract.Requires<ArgumentNullException>(generatorVersion != null);
+            if (entry == null) {  throw new ArgumentNullException("entry", "entry != null"); }
+            if (generatorVersion == null) {  throw new ArgumentNullException("generatorVersion", "generatorVersion != null"); }
 
             resource.EnsureUninitialized();
 
@@ -338,7 +311,7 @@ namespace Splunk.Client
             where TCollection : BaseResource, new()
             where TResource : BaseResource, new()
         {
-            Contract.Requires<ArgumentNullException>(feed != null);
+            if (feed == null) {  throw new ArgumentNullException("feed", "feed != null"); }
             collection.EnsureUninitialized();
 
             dynamic expando = new ExpandoObject();
@@ -416,7 +389,7 @@ namespace Splunk.Client
 
         internal void Initialize(ExpandoObject @object)
         {
-            Contract.Requires<ArgumentNullException>(@object != null);
+            if (@object == null) {  throw new ArgumentNullException("object", "@object != null"); }
 
             this.EnsureUninitialized();
             this.Object = @object;
@@ -429,23 +402,5 @@ namespace Splunk.Client
         }
 
         #endregion
-    }
-
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification =
-        "Contract classes should be contained in the same C# document as the class they reprsent.")
-    ]
-    [ContractClassFor(typeof(BaseResource))]
-    abstract class BaseResourceContract : BaseResource
-    {
-        protected internal override void Initialize(AtomEntry entry, Version generatorVersion)
-        {
-            Contract.Requires<ArgumentNullException>(entry != null);
-            Contract.Requires<ArgumentNullException>(generatorVersion != null);
-        }
-
-        protected internal override void Initialize(AtomFeed feed)
-        {
-            Contract.Requires<ArgumentNullException>(feed != null);
-        }
     }
 }

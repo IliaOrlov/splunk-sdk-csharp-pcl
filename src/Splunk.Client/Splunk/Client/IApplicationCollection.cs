@@ -1,24 +1,4 @@
-﻿/*
- * Copyright 2014 Splunk, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"): you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
-//// TODO:
-//// [O] Contracts
-//// [O] Documentation
-
-namespace Splunk.Client
+﻿namespace Splunk.Client
 {
     using System;
     using System.Collections;
@@ -26,16 +6,6 @@ namespace Splunk.Client
     using System.Collections.ObjectModel;
     using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
-
-    /// <summary>
-    /// Provides an operational interface to the Splunk application collection.
-    /// </summary>
-    /// <typeparam name="TApplication">
-    /// Type of the application.
-    /// </typeparam>
-    /// <seealso cref="T:IPaginated"/>
-    /// <seealso cref="T:IEntityCollection{TApplication"/>
-    [ContractClass(typeof(IApplicationCollectionContract<>))]
     public interface IApplicationCollection<TApplication> : IPaginated, IEntityCollection<TApplication, Resource> 
         where TApplication : BaseEntity<Resource>, IApplication, new()
     {
@@ -101,99 +71,5 @@ namespace Splunk.Client
         /// An object representing the installed application.
         /// </returns>
         Task<TApplication> InstallAsync(string path, string name = null, bool update = false);
-    }
-
-    /// <summary>
-    /// An application collection contract.
-    /// </summary>
-    /// <typeparam name="TApplication">
-    /// Type of the application.
-    /// </typeparam>
-    /// <seealso cref="T:Splunk.Client.IApplicationCollection{TApplication}"/>
-    [ContractClassFor(typeof(IApplicationCollection<>))]
-    abstract class IApplicationCollectionContract<TApplication> : IApplicationCollection<TApplication>
-        where TApplication : BaseEntity<Resource>, IApplication, new()
-    {
-        #region Properties
-
-        /// <summary>
-        /// Indexer to get items within this collection using array index syntax.
-        /// </summary>
-        /// <param name="index">
-        /// Zero-based index of the entry to access.
-        /// </param>
-        /// <returns>
-        /// The indexed item.
-        /// </returns>
-        public abstract TApplication this[int index] { get; }
-
-        /// <summary>
-        /// Gets the number of. 
-        /// </summary>
-        /// <value>
-        /// The count.
-        /// </value>
-        public abstract int Count { get; }
-
-        /// <summary>
-        /// Gets the messages.
-        /// </summary>
-        /// <value>
-        /// The messages.
-        /// </value>
-        public abstract ReadOnlyCollection<Message> Messages { get; }
-
-        /// <summary>
-        /// Gets the pagination.
-        /// </summary>
-        /// <value>
-        /// The pagination.
-        /// </value>
-        public abstract Pagination Pagination { get; }
-
-        #endregion
-
-        #region Methods
-
-        public Task<TApplication> CreateAsync(string name, string template, ApplicationAttributes attributes)
-        {
-            Contract.Requires<ArgumentNullException>(template != null);
-            Contract.Requires<ArgumentNullException>(name != null);
-            return default(Task<TApplication>);
-        }
-
-        public abstract Task GetAllAsync();
-
-        public abstract Task<TApplication> GetAsync(string name);
-
-        public abstract IEnumerator<TApplication> GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return default(IEnumerator<TApplication>);
-        }
-
-        public abstract Task GetSliceAsync(params Argument[] arguments);
-
-        public Task GetSliceAsync(IEnumerable<Argument> arguments)
-        {
-            return default(Task);
-        }
-
-        public Task GetSliceAsync(ApplicationCollection.Filter criteria)
-        {
-            Contract.Requires<ArgumentNullException>(criteria != null);
-            return default(Task);
-        }
-
-        public Task<TApplication> InstallAsync(string path, string name = null, bool update = false)
-        {
-            Contract.Requires<ArgumentNullException>(path != null);
-            return default(Task<TApplication>);
-        }
-
-        public abstract Task ReloadAsync();
-
-        #endregion
     }
 }

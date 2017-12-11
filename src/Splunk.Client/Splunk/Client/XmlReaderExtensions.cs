@@ -1,20 +1,4 @@
-﻿/*
- * Copyright 2014 Splunk, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"): you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
-namespace Splunk.Client
+﻿namespace Splunk.Client
 {
     using System;
     using System.Diagnostics.Contracts;
@@ -59,7 +43,7 @@ namespace Splunk.Client
         /// </exception>
         public static void EnsureMarkup(this XmlReader reader, XmlNodeType nodeType, params string[] names)
         {
-            Contract.Requires<ArgumentNullException>(reader != null);
+            if (reader == null) {  throw new ArgumentNullException("reader", "reader != null"); }
 
             if (reader.NodeType == nodeType)
             {
@@ -130,9 +114,9 @@ namespace Splunk.Client
         /// </exception>
         public static string GetRequiredAttribute(this XmlReader reader, string name)
         {
-            Contract.Requires<ArgumentNullException>(reader != null);
-            Contract.Requires<ArgumentNullException>(name != null);
-            Contract.Requires<ArgumentException>(reader.NodeType == XmlNodeType.Element);
+            if (reader == null) {  throw new ArgumentNullException("reader", "reader != null"); }
+            if (name == null) {  throw new ArgumentNullException("name", "name != null"); }
+            if (!(reader.NodeType == XmlNodeType.Element)) {  throw new ArgumentException("reader", "reader.NodeType == XmlNodeType.Element"); }
 
             string value = reader[name];
 
@@ -176,7 +160,7 @@ namespace Splunk.Client
         /// </exception>
         public static async Task<bool> MoveToDocumentElementAsync(this XmlReader reader, params string[] names)
         {
-            Contract.Requires<ArgumentNullException>(reader != null);
+            if (reader == null) {  throw new ArgumentNullException("reader", "reader != null"); }
 
             if (reader.ReadState == ReadState.Initial)
             {
@@ -244,9 +228,9 @@ namespace Splunk.Client
         /// </returns>
         public static async Task ReadEachDescendantAsync(this XmlReader reader, string name, Func<XmlReader, Task> task)
         {
-            Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(name), "name");
-            Contract.Requires<ArgumentNullException>(task != null, "action");
-            Contract.Requires<ArgumentNullException>(reader != null, "reader");
+            if (!(!string.IsNullOrEmpty(name))) {  throw new ArgumentException("name", "!string.IsNullOrEmpty(name)"); }
+            if (task == null) {  throw new ArgumentNullException("task", "task != null"); }
+            if (reader == null) {  throw new ArgumentNullException("reader", "reader != null"); }
 
             if (await reader.ReadToDescendantAsync(name).ConfigureAwait(false))
             {
@@ -308,8 +292,8 @@ namespace Splunk.Client
         /// </exception>
         public static async Task ReadElementSequenceAsync(this XmlReader reader, params string[] names)
         {
-            Contract.Requires<ArgumentNullException>(reader != null);
-            Contract.Requires<ArgumentNullException>(names != null);
+            if (reader == null) {  throw new ArgumentNullException("reader", "reader != null"); }
+            if (names == null) {  throw new ArgumentNullException("names", "names != null"); }
 
             foreach (var name in names)
             {
@@ -347,8 +331,8 @@ namespace Splunk.Client
         /// </exception>
         public static async Task ReadEndElementSequenceAsync(this XmlReader reader, params string[] names)
         {
-            Contract.Requires<ArgumentNullException>(reader != null);
-            Contract.Requires<ArgumentNullException>(names != null);
+            if (reader == null) {  throw new ArgumentNullException("reader", "reader != null"); }
+            if (names == null) {  throw new ArgumentNullException("names", "names != null"); }
 
             foreach (var name in names)
             {
@@ -371,8 +355,8 @@ namespace Splunk.Client
         /// </returns>
         public static async Task<string> ReadResponseElementAsync(this XmlReader reader, string name)
         {
-            Contract.Requires<ArgumentNullException>(reader != null);
-            Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(name));
+            if (reader == null) {  throw new ArgumentNullException("reader", "reader != null"); }
+            if (!(!string.IsNullOrEmpty(name))) {  throw new ArgumentException("name", "!string.IsNullOrEmpty(name)"); }
 
             reader.Requires(await reader.MoveToDocumentElementAsync("response").ConfigureAwait(false));
             await reader.ReadElementSequenceAsync(name).ConfigureAwait(false);
@@ -398,8 +382,8 @@ namespace Splunk.Client
         /// </returns>
         public static async Task<bool> ReadToDescendantAsync(this XmlReader reader, string name)
         {
-            Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(name), "name");
-            Contract.Requires<ArgumentNullException>(reader != null, "reader");
+            if (!(!string.IsNullOrEmpty(name))) {  throw new ArgumentException("name", "!string.IsNullOrEmpty(name)"); }
+            if (reader == null) {  throw new ArgumentNullException("reader", "reader != null"); }
 
             int depth = reader.Depth;
 
@@ -444,8 +428,8 @@ namespace Splunk.Client
         /// </returns>
         public static async Task<bool> ReadToFollowingAsync(this XmlReader reader, string name)
         {
-            Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(name), "name");
-            Contract.Requires<ArgumentNullException>(reader != null, "reader");
+            if (!(!string.IsNullOrEmpty(name))) {  throw new ArgumentException("name", "!string.IsNullOrEmpty(name)"); }
+            if (reader == null) {  throw new ArgumentNullException("reader", "reader != null"); }
 
             name = reader.NameTable.Add(name);
 
@@ -478,8 +462,8 @@ namespace Splunk.Client
         /// </returns>
         public static async Task<bool> ReadToNextSiblingAsync(this XmlReader reader, string name)
         {
-            Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(name), "name");
-            Contract.Requires<ArgumentNullException>(reader != null, "reader");
+            if (!(!string.IsNullOrEmpty(name))) {  throw new ArgumentException("name", "!string.IsNullOrEmpty(name)"); }
+            if (reader == null) {  throw new ArgumentNullException("reader", "reader != null"); }
 
             name = reader.NameTable.Add(name);
             XmlNodeType nodeType;

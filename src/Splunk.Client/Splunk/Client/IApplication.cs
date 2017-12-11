@@ -1,32 +1,10 @@
-﻿/*
- * Copyright 2014 Splunk, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"): you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
-namespace Splunk.Client
+﻿namespace Splunk.Client
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Net.Http;
     using System.Threading.Tasks;
-
-    /// <summary>
-    /// Provides an operational interface to Splunk application entities.
-    /// </summary>
-    /// <seealso cref="T:IEntity"/>
-    [ContractClass(typeof(IApplicationContract))]
     public interface IApplication : IEntity
     {
         #region Properties
@@ -272,62 +250,6 @@ namespace Splunk.Client
         /// <c>true</c> if the current snapshot was also updated.
         /// </returns>
         Task<bool> UpdateAsync(ApplicationAttributes attributes, bool checkForUpdates = false);
-
-        #endregion
-    }
-
-    /// <summary>
-    /// An application contract.
-    /// </summary>
-    /// <seealso cref="T:Splunk.Client.IApplication"/>
-    [ContractClassFor(typeof(IApplication))]
-    abstract class IApplicationContract : IApplication
-    {
-        #region Properties
-
-        public abstract string ApplicationAuthor { get; }
-        public abstract string Author { get; }
-        public abstract bool CheckForUpdates { get; }
-        public abstract bool Configured { get; }
-        public abstract string Description { get; }
-        public abstract bool Disabled { get; }
-        public abstract Eai Eai { get; }
-        public abstract string Label { get; }
-        public abstract IReadOnlyDictionary<string, Uri> Links { get; }
-        public abstract bool Refresh { get; }
-        public abstract bool StateChangeRequiresRestart { get; }
-        public abstract string Version { get; }
-        public abstract bool Visible { get; }
-
-        #endregion
-
-        #region Methods
-
-        public abstract Task DisableAsync();
-
-        public abstract Task EnableAsync();
-
-        public abstract Task GetAsync();
-
-        public abstract Task<ApplicationSetupInfo> GetSetupInfoAsync();
-
-        public abstract Task<ApplicationUpdateInfo> GetUpdateInfoAsync();
-
-        public abstract Task<ApplicationArchiveInfo> PackageAsync();
-
-        public abstract Task RemoveAsync();
-
-        public abstract Task<bool> SendAsync(HttpMethod method, string action, params Argument[] arguments);
-
-        public abstract Task<bool> UpdateAsync(params Argument[] arguments);
-
-        public abstract Task<bool> UpdateAsync(IEnumerable<Argument> arguments);
-
-        public Task<bool> UpdateAsync(ApplicationAttributes attributes, bool checkForUpdates)
-        {
-            Contract.Requires<ArgumentNullException>(attributes != null);
-            return default(Task<bool>);
-        }
 
         #endregion
     }
