@@ -94,8 +94,14 @@ namespace Splunk.Client
         /// <c>null</c> or empty, or <paramref name="port"/> is less than zero
         /// or greater than <c>65535</c>.
         /// </exception>
-        public Service(Scheme scheme, string host, int port, SslProtocols sslProtocol = default(SslProtocols), bool skipCertificateValidation = false, Namespace ns = null)
+        /// 
+#if NET452
+        public Service(Scheme scheme, string host, int port, Namespace ns = null)
+            : this(new Context(scheme, host, port), ns)
+#elif NETSTANDARD2_0
+        public Service(Scheme scheme, string host, int port, Namespace ns = null, SslProtocols sslProtocol = default(SslProtocols), bool skipCertificateValidation = false)
             : this(new Context(scheme, host, port, default(TimeSpan), sslProtocol, skipCertificateValidation), ns)
+#endif
         { }
 
         /// <summary>

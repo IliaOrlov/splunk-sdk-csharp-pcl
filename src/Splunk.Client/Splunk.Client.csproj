@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace />
     <Version>2.2.6.0</Version>
     <FileVersion>$(Version)</FileVersion>
@@ -10,15 +9,15 @@
     <Description>This package contains the Splunk Portable Client for consuming Splunk's API.</Description>
     <Copyright>2014 Splunk</Copyright>
     <PackageProjectUrl>https://github.com/splunk/splunk-sdk-csharp-pcl</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/IliaOrlov/splunk-sdk-csharp-pcl</RepositoryUrl>
+    <RepositoryUrl>https://github.com/IliaOrlov/splunk-sdk-csharp-pcl/tree/iorlov/netstandard2.0</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/splunk/splunk-sdk-csharp-pcl/blob/master/LICENSE</PackageLicenseUrl>
     <PackageIconUrl>http://docs.splunk.com/skins/splunk/images/icon-default.png</PackageIconUrl>
     <PackageTags>Splunk</PackageTags>
     <RepositoryType>git</RepositoryType>
     <Authors>Splunk, Inc.</Authors>
     <Company>Splunk, Inc.</Company>
-    
-    
+    <AssemblyOriginatorKeyFile>..\..\unofficial.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,12 +26,20 @@
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <OutputPath>$(SolutionDir)lib</OutputPath>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
-  
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
 </Project>

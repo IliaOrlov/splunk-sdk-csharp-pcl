@@ -59,7 +59,11 @@ namespace Splunk.Client
         /// or greater than <c>65535</c>.
         /// </exception>
         public Context(Scheme scheme, string host, int port, TimeSpan timeout = default(TimeSpan))
+#if NET452
+            : this(scheme, host, port, timeout, null)
+#elif NETSTANDARD2_0
             : this(scheme, host, port, timeout, SslProtocols.None, false)
+#endif
         {
             // NOTE: This constructor obviates the need for callers to include a 
             // using for System.Net.Http.
@@ -81,13 +85,16 @@ namespace Splunk.Client
         /// <param name="timeout">
         ///     The timeout.
         /// </param>
-        /// <param name="sslProtocols"></param>
         /// <exception name="ArgumentException">
         /// <paramref name="scheme"/> is invalid, <paramref name="host"/> is
         /// <c>null</c> or empty, or <paramref name="port"/> is less than zero
         /// or greater than <c>65535</c>.
         /// </exception>
+#if NET452
+        public Context(Scheme scheme, string host, int port, TimeSpan timeout, HttpMessageHandler handler, bool disposeHandler = true)
+#elif NETSTANDARD2_0
         public Context(Scheme scheme, string host, int port, TimeSpan timeout, SslProtocols sslProtocols, bool skipCertificateValidation)
+#endif
         {
             if (!(scheme == Scheme.Http || scheme == Scheme.Https)) {  throw new ArgumentException("scheme", "scheme == Scheme.Http || scheme == Scheme.Https"); }
             if (string.IsNullOrEmpty(host)) {  throw new ArgumentException("host", "!string.IsNullOrEmpty(host)"); }
@@ -96,7 +103,9 @@ namespace Splunk.Client
             this.Scheme = scheme;
             this.Host = host;
             this.Port = port;
-
+#if NET452
+            this.httpClient = handler == null ? new HttpClient(new HttpClientHandler {UseCookies = false}) : new HttpClient(handler, disposeHandler);
+#elif NETSTANDARD2_0
             var handler = new HttpClientHandler
             {
                 UseCookies = false,
@@ -107,7 +116,7 @@ namespace Splunk.Client
                 handler.ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true;
 
             this.httpClient = new HttpClient(handler);
-
+#endif
             this.httpClient.DefaultRequestHeaders.Add("User-Agent", "splunk-sdk-csharp/2.2.6");
             
             this.CookieJar = new CookieStore();
